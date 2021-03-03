@@ -1,4 +1,3 @@
-package Project2;
 import java.util.Random;
 
 public class Grid {
@@ -89,40 +88,30 @@ public class Grid {
 
     private void createBombGrid()
     {
-        int counter = 0;
-        int randRatio = ((numRows * numColumns) / this.numBombs);
-
-
+        int counterBombs = 0;
+        
         for (int i = 0; i < bombGrid.length; i++)
         {
-            for (int j = 0; j < bombGrid[i].length; j++)
-            {
-                int yn = new Random().nextInt(randRatio);
-                if (counter >= numBombs)
-                {
-                    return;
-                }
-                else if (yn == 1)
-                {
-                    bombGrid[i][j] = true;
-                    counter++;
-                }
-            }
+        	for (int j = 0; j < bombGrid[i].length; j++)
+        	{
+        		bombGrid[i][j] = false;
+        	}
         }
         
-        if (counter < numBombs)
+
+        
+        while (counterBombs < this.numBombs) //while there is less bombs than there is supposed to be
         {
-        	int randRow = new Random().nextInt(numRows);
-        	int randCol = new Random().nextInt(numColumns);
-        	do
-        	{
-        		if (bombGrid[randRow][randCol] == false)
-        		{
-        			bombGrid[randRow][randCol] = true;
-        			counter++;
-        		}
-        	} while (counter < numBombs);
+            int randNum1 = new Random().nextInt(this.numRows);
+            int randNum2 = new Random().nextInt(this.numColumns);
+            
+            if (bombGrid[randNum1][randNum2] == false)
+            {
+            	bombGrid[randNum1][randNum2] = true;
+            	counterBombs++;
+            }
         }
+
     }
 
     private void createCountGrid()
@@ -192,6 +181,31 @@ public class Grid {
     {
         return (row >= 0 && row < numRows && column >= 0 && column < numColumns);
     }
+    
+    public void displayBomb()
+    {
+  		for(int i = 0 ; i < bombGrid.length; i++)
+  		{
+  			for(int j = 0; j < bombGrid[i].length; j++)
+  			{
+  				if (bombGrid[i][j] == true)	System.out.print("T"+" ");
+  				else						System.out.print("F"+" ");
+  			}
+  			System.out.println();
+  		}
+  	}
+  	
+  	public void displayCount()
+  	{           
+  		for(int i = 0 ; i <countGrid.length; i++)
+  		{
+  			for(int j=0; j<countGrid[i].length; j++)
+  			{
+  				System.out.print(countGrid[i][j]+"  ");
+  			}
+  			System.out.println();
+  		}
+  	}
 
     public static void main(String[] args) {
 

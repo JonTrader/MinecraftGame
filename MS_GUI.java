@@ -1,4 +1,3 @@
-package Project2;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -45,12 +44,19 @@ public class MS_GUI extends JFrame {
 		private int rows;
 		private int columns;
 		private Grid grid;
+		int[][] countGrid;
+		boolean[][] bombGrid;
+		boolean[][] visited;
 		
 		public MineSweeperBoard()
 		{
 			this.grid = new Grid();
-			int[][] countGrid = grid.getCountGrid();
-			boolean[][] bombGrid = grid.getBombGrid();
+			this.countGrid= grid.getCountGrid();
+			this.bombGrid = grid.getBombGrid();
+			
+			
+			grid.displayBomb();
+			grid.displayCount();
 			
 			this.rows = grid.getNumRows();
 			this.columns = grid.getNumColumns();
@@ -68,7 +74,7 @@ public class MS_GUI extends JFrame {
 					
 					if (bombGrid[i][j] == true)
 					{
-						board[i][j].setName("•");
+						board[i][j].setName("ï¿½");
 					}
 					else
 					{
@@ -86,127 +92,47 @@ public class MS_GUI extends JFrame {
 	        return (row >= 0 && row < rows && column >= 0 && column < columns);
 	    }
 	    
-//	    public void findAdjCells(int row, int column)
-//	    {
-//	    	if (isValid(row, column))
-//	    	{
-//	    		if (board[row][column].getName().equals("0") && board[row][column].isEnabled() == true)
-//	    		{
-//	    			board[row][column].setText(board[row][column].getName());
-//	    			board[row][column].setEnabled(false);
-//	    			
-//	    			findAdjCells(row - 1, column);
-//	    			findAdjCells(row + 1, column);
-//	    			findAdjCells(row, column - 1);
-//	    			findAdjCells(row, column + 1);
-//	    			findAdjCells(row - 1, column + 1);
-//	    			findAdjCells(row - 1, column - 1);
-//	    			findAdjCells(row + 1, column - 1);
-//	    			findAdjCells(row + 1, column + 1);
-//	    		}
-//	    		else if (!(board[row][column].getName().equals("0")))
-//	    		{
-//	    			board[row][column].setText(board[row][column].getName());
-//	    			board[row][column].setEnabled(false);
-//	    			return;
-//	    		}
-//	    		else
-//	    		{
-//	    			return;
-//	    		}
-//	    	}
-//	    }
-		
-		public void findAdjCells(int row, int column)
-		{
-			
-            if (isValid(row - 1, column) && !board[row][column].getName().equals("•"))
-            {
-            	board[row - 1][column].setEnabled(false);
-            	board[row - 1][column].setText(board[row - 1][column].getName());
-                if (board[row - 1][column].getName().equals("0"))
-                {
-                	findAdjCells(row - 1, column);
-                }
-            }
 
-            if (isValid(row + 1, column) && !board[row][column].getName().equals("•"))
-            {
-            	board[row + 1][column].setEnabled(false);
-            	board[row + 1][column].setText(board[row + 1][column].getName());
-                if (board[row + 1][column].getName().equals("0"))
-                {
-                	findAdjCells(row + 1, column);
-                }
-            }
-
-            if (isValid(row, column - 1) && !board[row][column].getName().equals("•"))
-            {
-            	board[row][column - 1].setEnabled(false);
-            	board[row][column - 1].setText(board[row][column - 1].getName());
-                if (board[row][column - 1].getName().equals("0"))
-                {
-                	findAdjCells(row, column - 1);
-                }
-            }
-
-            if (isValid(row, column + 1) && !board[row][column].getName().equals("•")) 
-            {
-            	board[row][column + 1].setEnabled(false);
-            	board[row][column + 1].setText(board[row][column + 1].getName());
-                if (board[row][column + 1].getName().equals("0"))
-                {
-                	findAdjCells(row, column + 1);
-                }
-            }
-
-            if (isValid(row - 1, column + 1) && !board[row][column].getName().equals("•"))
-            {
-            	board[row - 1][column + 1].setEnabled(false);
-            	board[row - 1][column + 1].setText(board[row - 1][column + 1].getName());
-                if (board[row - 1][column + 1].getName().equals("0"))
-                {
-                	findAdjCells(row - 1, column + 1);
-                }
-            }
-
-            if (isValid(row - 1, column - 1) && !board[row][column].getName().equals("•"))
-            {
-            	board[row - 1][column - 1].setEnabled(false);
-            	board[row - 1][column - 1].setText(board[row - 1][column - 1].getName());
-                if (board[row - 1][column - 1].getName().equals("0"))
-                {
-                	findAdjCells(row - 1, column - 1);
-                }
-            }
-
-            if (isValid(row + 1, column - 1) && !board[row][column].getName().equals("•"))
-            {
-            	board[row + 1][column - 1].setEnabled(false);
-            	board[row + 1][column - 1].setText(board[row + 1][column - 1].getName());
-                if (board[row + 1][column - 1].getName().equals("0"))
-                {
-                	findAdjCells(row + 1, column - 1);
-                }       
-            }
-
-            if (isValid(row + 1, column + 1) && !board[row][column].getName().equals("•"))
-            {
-            	board[row + 1][column + 1].setEnabled(false);
-            	board[row + 1][column + 1].setText(board[row + 1][column + 1].getName());
-                if (board[row + 1][column + 1].getName().equals("0"))
-                {
-                	findAdjCells(row + 1, column + 1);
-                }
-            }
-		}
 		
 		public void promptMessage()
 		{
 			int yesNo = JOptionPane.showConfirmDialog(null,  "Play Again?", "Yes or No", JOptionPane.YES_NO_OPTION);
 			if(yesNo == JOptionPane.YES_OPTION)
 			{
-				new MS_GUI();
+				this.grid = new Grid();
+				this.countGrid = grid.getCountGrid();
+				this.bombGrid = grid.getBombGrid();
+				
+				grid.displayBomb();
+				grid.displayCount();
+				
+				this.rows = grid.getNumRows();
+				this.columns = grid.getNumColumns();
+				
+				for (int i = 0; i < board.length; i++)
+				{
+					for (int j = 0; j < board[i].length; j++)
+					{
+						board[i][j].addActionListener(this);
+						board[i][j].setEnabled(true);
+						
+						board[i][j].setText("");
+						board[i][j].setBackground(null);
+						
+						if (bombGrid[i][j] == true)
+						{
+							board[i][j].setName("ï¿½");
+						}
+						else
+						{
+							board[i][j].setName("" + countGrid[i][j]);
+							nonBombs++;
+						}
+
+					}
+				}
+				
+				
 			}
 			else
 			{
@@ -224,15 +150,7 @@ public class MS_GUI extends JFrame {
 			JOptionPane.showMessageDialog(null, "You Won!");
 		}
 		
-		public int theRow(int x)
-		{
-			return x / 47;
-		}
-		
-		public int theColumn(int y)
-		{
-			return y / 45;
-		}
+
 
 		@Override
 		public void actionPerformed(ActionEvent e) 
@@ -240,13 +158,13 @@ public class MS_GUI extends JFrame {
 			JButton btnClicked = (JButton)e.getSource();
 			btnClicked.setEnabled(false);
 			
-			if (btnClicked.getName().equals("•"))
+			if (btnClicked.getName().equals("ï¿½"))
 			{
 				for (int i = 0; i < board.length; i++)
 				{
 					for (int j = 0; j < board[i].length; j++)
 					{
-						if (board[i][j].getName().equals("•"))
+						if (board[i][j].getName().equals("ï¿½"))
 						{
 							board[i][j].setBackground(Color.red);
 						}
@@ -262,7 +180,7 @@ public class MS_GUI extends JFrame {
 			{
 				btnClicked.setEnabled(false);
 				btnClicked.setText(btnClicked.getName());
-				findAdjCells(theRow(btnClicked.getX()), theColumn(btnClicked.getY()));
+//				// Reveal adjacent 0 cells
 			}
 			else
 			{
