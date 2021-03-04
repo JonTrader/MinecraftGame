@@ -10,7 +10,7 @@ public class MS_GUI extends JFrame {
 	
 	private JPanel mainBoard;
 	private MineSweeperBoard MSBoard;
-	private int nonBombs;
+	
 	
 	public MS_GUI()
 	{
@@ -47,12 +47,15 @@ public class MS_GUI extends JFrame {
 		int[][] countGrid;
 		boolean[][] bombGrid;
 		boolean[][] visited;
+		private int nonBombs;
 		
 		public MineSweeperBoard()
 		{
 			this.grid = new Grid();
 			this.countGrid= grid.getCountGrid();
 			this.bombGrid = grid.getBombGrid();
+			
+			this.nonBombs = 0;
 			
 			
 			grid.displayBomb();
@@ -74,7 +77,7 @@ public class MS_GUI extends JFrame {
 					
 					if (bombGrid[i][j] == true)
 					{
-						board[i][j].setName("�");
+						board[i][j].setName("•");
 					}
 					else
 					{
@@ -106,6 +109,8 @@ public class MS_GUI extends JFrame {
 				grid.displayBomb();
 				grid.displayCount();
 				
+				this.nonBombs = 0;
+				
 				this.rows = grid.getNumRows();
 				this.columns = grid.getNumColumns();
 				
@@ -113,7 +118,6 @@ public class MS_GUI extends JFrame {
 				{
 					for (int j = 0; j < board[i].length; j++)
 					{
-						board[i][j].addActionListener(this);
 						board[i][j].setEnabled(true);
 						
 						board[i][j].setText("");
@@ -121,7 +125,7 @@ public class MS_GUI extends JFrame {
 						
 						if (bombGrid[i][j] == true)
 						{
-							board[i][j].setName("�");
+							board[i][j].setName("•");
 						}
 						else
 						{
@@ -150,21 +154,58 @@ public class MS_GUI extends JFrame {
 			JOptionPane.showMessageDialog(null, "You Won!");
 		}
 		
+		
+		
+		public void adjacentCells(int row, int col)
+		{
+			if (row < 0 || row >= this.rows || col < 0 || col >= this.columns)
+			{
+				return;
+			}
+			
+			if (this.countGrid[row][col] != 0)
+			{
+				return;
+			}
+			
+			if(this.visited[row][col] == true)
+			{
+				return;
+			}
+			
+			// HEREEEEEEEEEEEEEEEEEE
+			
+			visited[row][col] = true;
+			
+			board[row][col].setText(board[row][col].getName());
+			
+			
+		     adjacentCells(row - 1, col); //up
+		     adjacentCells(row + 1, col); //down
+		     adjacentCells(row, col + 1);  //right
+		     adjacentCells(row, col - 1); //left
+		     adjacentCells(row - 1, col-1); //main dia top cor
+		     adjacentCells(row + 1, col +1);  //main dia bottom cor
+		     adjacentCells(row + 1, col - 1);  //sec dia bottom cor
+		     adjacentCells(row - 1, col + 1); //sec dia top cor
+		}
+		
+		
+		
 
 
 		@Override
 		public void actionPerformed(ActionEvent e) 
 		{
 			JButton btnClicked = (JButton)e.getSource();
-			btnClicked.setEnabled(false);
 			
-			if (btnClicked.getName().equals("�"))
+			if (btnClicked.getName().equals("•"))
 			{
 				for (int i = 0; i < board.length; i++)
 				{
 					for (int j = 0; j < board[i].length; j++)
 					{
-						if (board[i][j].getName().equals("�"))
+						if (board[i][j].getName().equals("•"))
 						{
 							board[i][j].setBackground(Color.red);
 						}
@@ -176,16 +217,20 @@ public class MS_GUI extends JFrame {
 				displayLoss();
 				promptMessage();
 			}
-			else if (btnClicked.getName().equals("0"))
-			{
-				btnClicked.setEnabled(false);
-				btnClicked.setText(btnClicked.getName());
-//				// Reveal adjacent 0 cells
-			}
+//			else if (btnClicked.getName().equals("0"))
+//			{
+//				
+//				
+////				// Reveal adjacent 0 cells
+//			}
 			else
 			{
+				btnClicked.setEnabled(false);
+				
 				btnClicked.setText(btnClicked.getName());
-				nonBombs--;
+				System.out.println(nonBombs);
+				nonBombs = nonBombs - 1;
+				System.out.println(nonBombs);
 				if (nonBombs == 0)
 				{
 					displayWin();
