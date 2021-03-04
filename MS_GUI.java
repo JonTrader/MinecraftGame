@@ -156,6 +156,112 @@ public class MS_GUI extends JFrame {
 		
 		
 		
+		
+		public void revealAdjCells(int r, int c)
+		{
+			
+			
+			if( (r > 0 ) && !(board[r - 1][c].getName().equals("•")))
+			{
+				board[r-1][c].setText(board[r-1][c].getName());  //up
+				
+				if(board[r-1][c].isEnabled())
+				{
+					nonBombs = nonBombs - 1;
+					board[r-1][c].setEnabled(false);
+				}
+			}
+			
+			if ( (r + 1 < this.rows) && !(board[r + 1][c].getName().equals("•")) )
+			{
+				board[r+1][c].setText(board[r+1][c].getName());   //down
+				
+				if( board[r+1][c].isEnabled())
+				{
+					nonBombs = nonBombs - 1;
+					board[r+1][c].setEnabled(false);
+				}
+				
+				
+			}
+			
+			
+			if ( (c + 1 < this.columns) && !(board[r][c + 1].getName().equals("•")) )
+			{
+				board[r][c+1].setText(board[r][c+1].getName() ); //right
+				
+				if( board[r][c+1].isEnabled() )
+				{
+					nonBombs = nonBombs - 1;
+					board[r][c+1].setEnabled(false);
+				}
+				
+			}
+			
+			if ( (c > 0 ) && !(board[r][c - 1].getName().equals("•")) )
+			{
+				board[r][c-1].setText(board[r][c-1].getName()); //left
+				
+				if( board[r][c-1].isEnabled() )
+				{
+					nonBombs = nonBombs - 1;
+					board[r][c-1].setEnabled(false);
+				}
+			}
+			
+			
+			if ( (r > 0 &&  c > 0) && !(board[r - 1][c - 1].getName().equals("•")) ) 
+			{
+				board[r-1][c-1].setText(board[r-1][c-1].getName()); // main dia left corner
+				
+				if(board[r-1][c-1].isEnabled())
+				{
+					nonBombs = nonBombs - 1;
+					board[r-1][c-1].setEnabled(false);
+				}
+				 
+			}
+			
+			
+			
+			if ( (r + 1 < this.rows) && (c + 1 < this.columns) && !(board[r + 1][c + 1].getName().equals("•")) )
+			{
+				board[r+1][c+1].setText(board[r+1][c+1].getName()); //main dia right corner
+				
+				if(board[r+1][c+1].isEnabled())
+				{
+					nonBombs = nonBombs - 1;
+					board[r+1][c+1].setEnabled(false);
+				}
+			}
+			
+			
+			if ( (r + 1 < this.rows) && (c > 0) && !(board[r + 1][c - 1].getName().equals("•")) )
+			{
+				board[r+1][c-1].setText(board[r+1][c-1].getName()); //2nd dia left corner
+				
+				if(board[r+1][c-1].isEnabled())
+				{
+					nonBombs = nonBombs - 1;
+					board[r+1][c-1].setEnabled(false);
+				}
+			}
+			
+			
+			if ( (r > 0 ) && (c +1 < this.columns) && !(board[r - 1][c + 1].getName().equals("•")) )
+			{
+				board[r-1][c+1].setText(board[r-1][c+1].getName()); //2nd dia right corner
+				
+				if(board[r-1][c+1].isEnabled())
+				{
+					nonBombs = nonBombs - 1;
+					board[r-1][c+1].setEnabled(false);
+				}
+			}
+			
+			
+		}
+		
 		public void adjacentCells(int row, int col)
 		{
 			if (row < 0 || row >= this.rows || col < 0 || col >= this.columns)
@@ -168,26 +274,32 @@ public class MS_GUI extends JFrame {
 				return;
 			}
 			
-			if(this.visited[row][col] == true)
+			if(board[row][col].isEnabled() == false)
 			{
 				return;
 			}
 			
-			// HEREEEEEEEEEEEEEEEEEE
-			
-			visited[row][col] = true;
+//			 HEREEEEEEEEEEEEEEEEEE
 			
 			board[row][col].setText(board[row][col].getName());
+			board[row][col].setEnabled(false);
+			System.out.println(nonBombs);
+			nonBombs = nonBombs - 1;
+			System.out.println(nonBombs);
 			
 			
-		     adjacentCells(row - 1, col); //up
-		     adjacentCells(row + 1, col); //down
-		     adjacentCells(row, col + 1);  //right
-		     adjacentCells(row, col - 1); //left
-		     adjacentCells(row - 1, col-1); //main dia top cor
-		     adjacentCells(row + 1, col +1);  //main dia bottom cor
-		     adjacentCells(row + 1, col - 1);  //sec dia bottom cor
-		     adjacentCells(row - 1, col + 1); //sec dia top cor
+			
+			
+		    adjacentCells(row - 1, col); //up
+		    adjacentCells(row + 1, col); //down
+		    adjacentCells(row, col + 1);  //right
+		    adjacentCells(row, col - 1); //left
+		    adjacentCells(row - 1, col-1); //main dia top cor
+		    adjacentCells(row + 1, col +1);  //main dia bottom cor
+		    adjacentCells(row + 1, col - 1);  //sec dia bottom cor
+		    adjacentCells(row - 1, col + 1); //sec dia top cor
+		    
+		    this.revealAdjCells(row,col);
 		}
 		
 		
@@ -198,6 +310,24 @@ public class MS_GUI extends JFrame {
 		public void actionPerformed(ActionEvent e) 
 		{
 			JButton btnClicked = (JButton)e.getSource();
+			
+			
+            int row = 0;
+            int col = 0;
+            
+            for(int i = 0; i < board.length; i++ )
+            {
+            	for(int j = 0; j < board[i].length; j++)
+            	{
+            		if(board[i][j] == btnClicked)
+            		{
+            			row = i;
+            			col = j;
+            			break;
+            		}
+            	}
+            }
+			
 			
 			if (btnClicked.getName().equals("•"))
 			{
@@ -217,12 +347,11 @@ public class MS_GUI extends JFrame {
 				displayLoss();
 				promptMessage();
 			}
-//			else if (btnClicked.getName().equals("0"))
-//			{
-//				
-//				
-////				// Reveal adjacent 0 cells
-//			}
+			else if (btnClicked.getName().equals("0"))
+			{
+//				Reveal adjacent 0 cells
+				this.adjacentCells(row, col);
+			}
 			else
 			{
 				btnClicked.setEnabled(false);
